@@ -1,120 +1,164 @@
-// Lista de mundos - MODIFICA ESTO
+// ======================
+// DATOS DE LOS MUNDOS
+// ======================
+// MODIFICA ESTO CON TUS MUNDOS
 const mundos = [
     {
         id: 1,
         nombre: "Custom Chat System",
-        archivo: "CustomChatSystem.rbxl",
+        archivo: "CustomChatSystem.rbxl",  // Nombre exacto del archivo en /worlds/
         descripcion: "Sistema de chat personalizado para Roblox con comandos y configuración avanzada.",
-        tamano: "138 KB" // CAMBIA AL TAMAÑO REAL
-    },
-    // Añade más mundos si quieres
+        tamano: "138 KB"  // CAMBIA ESTO AL TAMAÑO REAL DE TU ARCHIVO
+    }
 ];
 
-// Contador de descargas
-let descargas = localStorage.getItem('descargas') ? JSON.parse(localStorage.getItem('descargas')) : {};
-
-// Inicializar
+// ======================
+// CUANDO LA PÁGINA CARGA
+// ======================
 document.addEventListener('DOMContentLoaded', function() {
-    // Configurar navegación
+    console.log('Página cargada, inicializando...');
+    
+    // 1. Configurar navegación
     configurarNavegacion();
     
-    // Cargar mundos
+    // 2. Cargar mundos inmediatamente
     cargarMundos();
     
-    // Mostrar estadísticas
-    actualizarEstadisticas();
+    // 3. Verificar la sección actual
+    verificarSeccionActual();
 });
 
-// Configurar navegación
+// ======================
+// CONFIGURAR NAVEGACIÓN
+// ======================
 function configurarNavegacion() {
-    const links = document.querySelectorAll('.menu a');
+    const menuLinks = document.querySelectorAll('.menu-link');
     
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
             
-            // Quitar activo de todos
-            links.forEach(l => l.classList.remove('active'));
+            console.log('Clic en:', this.textContent);
             
-            // Marcar este como activo
+            // Quitar 'active' de todos los enlaces
+            menuLinks.forEach(l => l.classList.remove('active'));
+            
+            // Añadir 'active' al enlace clickeado
             this.classList.add('active');
             
-            // Obtener sección
-            const seccionId = this.getAttribute('href').substring(1);
+            // Obtener la sección a mostrar
+            const targetId = this.getAttribute('href').substring(1);
             
-            // Mostrar sección
-            mostrarSeccion(seccionId);
+            // Mostrar la sección
+            mostrarSeccion(targetId);
         });
     });
 }
 
-// Mostrar sección
-function mostrarSeccion(id) {
-    // Ocultar todas
-    document.querySelectorAll('.section').forEach(sec => {
-        sec.classList.remove('active');
+// ======================
+// MOSTRAR SECCIÓN
+// ======================
+function mostrarSeccion(seccionId) {
+    console.log('Mostrando sección:', seccionId);
+    
+    // Ocultar todas las secciones
+    document.querySelectorAll('.section').forEach(seccion => {
+        seccion.classList.remove('active');
     });
     
-    // Mostrar seleccionada
-    const seccion = document.getElementById(id);
-    if (seccion) {
-        seccion.classList.add('active');
+    // Mostrar la sección seleccionada
+    const seccionActiva = document.getElementById(seccionId);
+    if (seccionActiva) {
+        seccionActiva.classList.add('active');
+        
+        // Si es la sección de mundos, recargar los mundos
+        if (seccionId === 'mundos') {
+            setTimeout(cargarMundos, 50);
+        }
     }
 }
 
-// Cargar mundos
+// ======================
+// CARGAR Y MOSTRAR MUNDOS
+// ======================
 function cargarMundos() {
-    const contenedor = document.getElementById('lista-mundos');
-    if (!contenedor) return;
+    const container = document.getElementById('worlds-container');
     
-    contenedor.innerHTML = '';
+    if (!container) {
+        console.error('No se encontró el contenedor de mundos');
+        return;
+    }
     
+    console.log('Cargando mundos...');
+    console.log('Total de mundos:', mundos.length);
+    
+    // Limpiar contenedor
+    container.innerHTML = '';
+    
+    // Si no hay mundos
+    if (mundos.length === 0) {
+        container.innerHTML = '<p style="color: #888; font-style: italic;">No hay mundos disponibles.</p>';
+        return;
+    }
+    
+    // Crear tarjeta para cada mundo
     mundos.forEach(mundo => {
-        const count = descargas[mundo.id] || 0;
+        console.log('Creando tarjeta para:', mundo.nombre);
         
-        const div = document.createElement('div');
-        div.className = 'mundo';
-        div.innerHTML = `
+        const worldCard = document.createElement('div');
+        worldCard.className = 'world-card';
+        
+        worldCard.innerHTML = `
             <h3>${mundo.nombre}</h3>
             <p>${mundo.descripcion}</p>
-            <p><strong>Tamaño:</strong> ${mundo.tamano}</p>
-            <p><strong>Descargas:</strong> ${count}</p>
-            <a href="worlds/${mundo.archivo}" class="btn" download 
-               onclick="registrarDescarga(${mundo.id})">
+            <div class="world-info">
+                <span><strong>Tamaño:</strong> ${mundo.tamano}</span>
+                <span><strong>Formato:</strong> .rbxl</span>
+            </div>
+            <a href="worlds/${mundo.archivo}" class="download-btn" download>
                 Descargar
             </a>
         `;
         
-        contenedor.appendChild(div);
+        container.appendChild(worldCard);
     });
 }
 
-// Registrar descarga
-function registrarDescarga(id) {
-    // Incrementar contador
-    if (!descargas[id]) descargas[id] = 0;
-    descargas[id]++;
+// ======================
+// VERIFICAR SECCIÓN ACTUAL
+// ======================
+function verificarSeccionActual() {
+    // Verificar si hay hash en la URL
+    const hash = window.location.hash.substring(1);
     
-    // Guardar
-    localStorage.setItem('descargas', JSON.stringify(descargas));
-    
-    // Actualizar
-    cargarMundos();
-    actualizarEstadisticas();
-    
-    // Mensaje
-    alert('Descarga iniciada. Abre el archivo con Roblox Studio.');
+    if (hash && ['inicio', 'mundos', 'config'].includes(hash)) {
+        // Actualizar menú
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${hash}`) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Mostrar sección correspondiente
+        mostrarSeccion(hash);
+    } else {
+        // Por defecto mostrar inicio
+        mostrarSeccion('inicio');
+    }
 }
 
-// Actualizar estadísticas
-function actualizarEstadisticas() {
-    // Total mundos
-    document.getElementById('total-mundos').textContent = mundos.length;
-    
-    // Total descargas
-    let total = 0;
-    for (let id in descargas) {
-        total += descargas[id];
-    }
-    document.getElementById('total-descargas').textContent = total;
+// ======================
+// FUNCIÓN PARA DESCARGAR
+// ======================
+// Esta función se llama desde el botón de descarga
+function descargarMundo(archivo) {
+    console.log('Iniciando descarga de:', archivo);
+    // La descarga se maneja automáticamente con el atributo "download" en el enlace
 }
+
+// ======================
+// PARA DEPURACIÓN
+// ======================
+console.log('Script cargado correctamente');
+console.log('Mundos disponibles:', mundos);
