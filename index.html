@@ -3,89 +3,87 @@
 <head>
     <title>Mundos Roblox</title>
     <style>
-        body { font-family: Arial; background: #222; color: white; margin: 0; padding: 20px; }
-        .menu { background: #333; padding: 10px; margin-bottom: 20px; }
-        .menu a { color: white; margin-right: 15px; text-decoration: none; }
-        .menu a:hover { color: #0af; }
-        .mundo { background: #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        .mundo h3 { color: #0af; margin: 0 0 10px 0; }
-        .mundo p { margin: 5px 0; color: #ccc; }
-        .btn { background: #0af; color: white; padding: 8px 15px; text-decoration: none; border-radius: 3px; display: inline-block; }
-        .btn:hover { background: #08c; }
+        body {
+            font-family: Arial;
+            background: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .menu {
+            background: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .menu a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        
+        .menu a:hover {
+            color: #4CAF50;
+        }
+        
+        .mundo {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .btn {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+        }
+        
+        .seccion {
+            display: none;
+        }
+        
+        .activo {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="menu">
-        <a href="#inicio">Inicio</a>
-        <a href="#mundos">Mundos</a>
-        <a href="#info">Info</a>
+        <a href="#" onclick="mostrarSeccion('inicio')">Inicio</a>
+        <a href="#" onclick="mostrarSeccion('mundos')">Mundos</a>
+        <a href="#" onclick="mostrarSeccion('info')">Info</a>
     </div>
 
-    <div id="inicio">
+    <div id="inicio" class="seccion activo">
         <h1>Mundos Roblox</h1>
-        <p>Descarga mundos para Roblox Studio</p>
-        <p>Ve a la sección "Mundos" para descargar.</p>
+        <p>Descarga mundos para Roblox Studio.</p>
+        <p>Selecciona "Mundos" en el menú.</p>
     </div>
 
-    <div id="mundos" style="display:none;">
+    <div id="mundos" class="seccion">
         <h2>Mundos para descargar</h2>
         <div id="lista-mundos"></div>
     </div>
 
-    <div id="info" style="display:none;">
+    <div id="info" class="seccion">
         <h2>Información</h2>
+        <p><strong>Cómo usar:</strong></p>
         <p>1. Descarga el archivo .rbxl</p>
         <p>2. Abre Roblox Studio</p>
         <p>3. Archivo → Abrir</p>
         <p>4. Selecciona el archivo</p>
-        <p>5. ¡Listo!</p>
+        <p>5. ¡Listo para editar!</p>
     </div>
 
-    <script>
-        // Tus mundos
-        const mundos = [
-            {
-                nombre: "Mi Mundo 1",
-                archivo: "mundo1.rbxl",
-                desc: "Descripción del mundo 1",
-                tamano: "10 MB"
-            },
-            {
-                nombre: "Mi Mundo 2", 
-                archivo: "mundo2.rbxl",
-                desc: "Descripción del mundo 2",
-                tamano: "15 MB"
-            }
-        ];
-
-        // Mostrar mundos
-        const lista = document.getElementById('lista-mundos');
-        mundos.forEach(mundo => {
-            lista.innerHTML += `
-                <div class="mundo">
-                    <h3>${mundo.nombre}</h3>
-                    <p>${mundo.desc}</p>
-                    <p>Tamaño: ${mundo.tamano}</p>
-                    <a href="worlds/${mundo.archivo}" class="btn" download>Descargar</a>
-                </div>
-            `;
-        });
-
-        // Menú simple
-        document.querySelectorAll('.menu a').forEach(enlace => {
-            enlace.addEventListener('click', function(e) {
-                e.preventDefault();
-                const id = this.getAttribute('href').substring(1);
-                
-                // Ocultar todo
-                document.getElementById('inicio').style.display = 'none';
-                document.getElementById('mundos').style.display = 'none';
-                document.getElementById('info').style.display = 'none';
-                
-                // Mostrar seleccionado
-                document.getElementById(id).style.display = 'block';
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
