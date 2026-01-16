@@ -23,8 +23,8 @@
             --card-color: #ffffff;
             --text-color: #333333;
             --text-secondary: #666666;
-            --primary-color: #4CAF50; /* FIJADO - no cambia en modo claro */
-            --primary-hover: #45a049;
+            --primary-color: #4CAF50; /* FIJADO */
+            --primary-hover: #45a049; /* FIJADO */
             --border-color: #dddddd;
         }
 
@@ -38,8 +38,9 @@
             overflow-x: hidden;
         }
 
-        body.no-scroll {
-            overflow: hidden;
+        /* QUITAR TODOS LOS ESTILOS DE SCROLL AUTOMÁTICO */
+        html {
+            scroll-behavior: auto !important;
         }
 
         .sidebar {
@@ -77,6 +78,7 @@
             transition: all 0.3s;
             border: 1px solid var(--border-color);
             font-size: var(--font-size);
+            cursor: pointer;
         }
 
         .menu a:hover {
@@ -94,11 +96,12 @@
             margin-left: 240px;
             padding: 40px;
             min-height: 100vh;
-            transition: margin-left 0.3s, padding 0.3s;
         }
 
+        /* SECCIONES VISIBLES */
         .section {
             display: none;
+            min-height: 80vh;
         }
 
         .section.active {
@@ -107,14 +110,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         h1 {
             color: var(--primary-color);
             margin: 0 0 20px 0;
             font-size: calc(var(--font-size) * 2);
+            padding-top: 0;
         }
 
         h2 {
@@ -351,15 +355,15 @@
     <div class="sidebar">
         <h2>Roblox Studio Models</h2>
         <nav class="menu">
-            <a href="#home" class="menu-link active" data-section="home">Home</a>
-            <a href="#models" class="menu-link" data-section="models">Models</a>
-            <a href="#configs" class="menu-link" data-section="configs">Configs</a>
+            <a href="javascript:void(0)" class="menu-link active" data-section="home">Home</a>
+            <a href="javascript:void(0)" class="menu-link" data-section="models">Models</a>
+            <a href="javascript:void(0)" class="menu-link" data-section="configs">Configs</a>
         </nav>
     </div>
 
     <!-- Contenido principal -->
     <div class="content">
-        <!-- Sección Home -->
+        <!-- Sección Home (VISIBLE) -->
         <section id="home" class="section active">
             <h1>Welcome to RSM</h1>
             <p>Portal to download models created in Roblox Studio.</p>
@@ -378,7 +382,7 @@
             </div>
         </section>
 
-        <!-- Sección Models -->
+        <!-- Sección Models (OCULTA inicialmente) -->
         <section id="models" class="section">
             <h1>Available Models</h1>
             <p>Click "Download" to get the .rbxl file.</p>
@@ -388,7 +392,7 @@
             </div>
         </section>
 
-        <!-- Sección Configs -->
+        <!-- Sección Configs (OCULTA inicialmente) -->
         <section id="configs" class="section">
             <h1>Configuration</h1>
             <p>Customize your experience.</p>
@@ -443,6 +447,371 @@
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ===== MODELS DATA =====
+        const models = [
+            {
+                id: 1,
+                name: "Custom Chat System",
+                filename: "CustomChatSystem.rbxl",
+                description: "Custom chat system for Roblox with advanced commands and configuration.",
+                size: null
+            }
+        ];
+
+        // ===== APP STATE =====
+        let currentSection = 'home';
+        let downloads = JSON.parse(localStorage.getItem('rsm_downloads') || '{}');
+        let settings = JSON.parse(localStorage.getItem('rsm_settings') || '{}');
+
+        // Default settings
+        const defaultSettings = {
+            theme: 'dark',
+            primaryColor: '#4CAF50',
+            fontSize: 16,
+            autoSize: true
+        };
+
+        // ===== INITIALIZE APP =====
+        function initApp() {
+            console.log('🚀 Initializing RSM...');
+            
+            // Merge with default settings
+            settings = { ...defaultSettings, ...settings };
+            
+            // Apply saved settings
+            applySettings();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Load models
+            loadModels(true);
+            
+            // Update stats
+            updateStats();
+            
+            console.log('✅ RSM initialized - Current section:', currentSection);
+        }
+
+        // ===== APPLY SETTINGS =====
+        function applySettings() {
+            // Apply theme
+            if (settings.theme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('theme-toggle').checked = true;
+            }
+            
+            // Apply primary color
+            applyPrimaryColor(settings.primaryColor);
+            
+            // Apply font size
+            applyFontSize(settings.fontSize);
+            
+            // Apply auto-size
+            document.getElementById('auto-size').checked = settings.autoSize;
+        }
+
+        // ===== APPLY PRIMARY COLOR =====
+        function applyPrimaryColor(color) {
+            // Save color
+            settings.primaryColor = color;
+            
+            // Apply to CSS variables
+            document.documentElement.style.setProperty('--primary-color', color);
+            
+            // Calculate hover color
+            const hoverColor = darkenColor(color, 20);
+            document.documentElement.style.setProperty('--primary-hover', hoverColor);
+            
+            // Update select
+            document.getElementById('color-select').value = color;
+            
+            // Save settings
+            saveSettings();
+        }
+
+        // ===== DARKEN COLOR =====
+        function darkenColor(color, percent) {
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            
+            const newR = Math.floor(r * (100 - percent) / 100);
+            const newG = Math.floor(g * (100 - percent) / 100);
+            const newB = Math.floor(b * (100 - percent) / 100);
+            
+            return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+        }
+
+        // ===== APPLY FONT SIZE =====
+        function applyFontSize(size) {
+            // Validate size
+            size = Math.max(12, Math.min(24, size));
+            settings.fontSize = size;
+            
+            // Apply to CSS variable
+            document.documentElement.style.setProperty('--font-size', `${size}px`);
+            
+            // Update display
+            document.getElementById('font-size-value').textContent = `${size}px`;
+            
+            // Save settings
+            saveSettings();
+        }
+
+        // ===== SETUP EVENT LISTENERS =====
+        function setupEventListeners() {
+            console.log('🔧 Setting up event listeners...');
+            
+            // Navigation - SIN SCROLL
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // IMPORTANTE: Prevenir comportamiento default
+                    
+                    // Update active
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show section
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // NO actualizar URL hash para evitar scroll
+                    // window.location.hash = section;
+                });
+            });
+            
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-mode');
+                    settings.theme = 'light';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    settings.theme = 'dark';
+                }
+                // Re-apply color for consistency
+                applyPrimaryColor(settings.primaryColor);
+                saveSettings();
+            });
+            
+            // Color select
+            document.getElementById('color-select').addEventListener('change', function() {
+                applyPrimaryColor(this.value);
+            });
+            
+            // Font size controls
+            document.getElementById('font-decrease').addEventListener('click', function() {
+                applyFontSize(settings.fontSize - 1);
+            });
+            
+            document.getElementById('font-increase').addEventListener('click', function() {
+                applyFontSize(settings.fontSize + 1);
+            });
+            
+            // Reset button
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                if (confirm('Reset all download counters?')) {
+                    downloads = {};
+                    localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
+                    loadModels();
+                    updateStats();
+                    alert('Counters reset!');
+                }
+            });
+            
+            // Auto-size toggle
+            document.getElementById('auto-size').addEventListener('change', function() {
+                settings.autoSize = this.checked;
+                saveSettings();
+                if (this.checked) {
+                    loadModels(true);
+                }
+            });
+        }
+
+        // ===== SHOW SECTION =====
+        function showSection(section) {
+            console.log('📄 Showing section:', section);
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            // Show selected section
+            const target = document.getElementById(section);
+            if (target) {
+                target.classList.add('active');
+                currentSection = section;
+                
+                // Update title
+                document.title = `RSM - ${section.charAt(0).toUpperCase() + section.slice(1)}`;
+                
+                // Load models if needed
+                if (section === 'models') {
+                    setTimeout(() => loadModels(), 10);
+                }
+                
+                // Update stats if needed
+                if (section === 'home') {
+                    updateStats();
+                }
+            }
+        }
+
+        // ===== LOAD MODELS =====
+        async function loadModels(detectSize = false) {
+            const container = document.getElementById('models-container');
+            
+            if (!container) {
+                console.error('❌ No container found!');
+                return;
+            }
+            
+            console.log('📦 Loading models...');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Check if we have models
+            if (models.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">No models available.</p>';
+                return;
+            }
+            
+            // Create model cards
+            for (let model of models) {
+                // Detect size if needed
+                if (detectSize && settings.autoSize !== false) {
+                    try {
+                        const size = await getFileSize(`worlds/${model.filename}`);
+                        model.size = size;
+                    } catch (error) {
+                        model.size = 'Unknown';
+                    }
+                }
+                
+                // Create card
+                const card = document.createElement('div');
+                card.className = 'model-card';
+                
+                const downloadCount = downloads[model.id] || 0;
+                
+                card.innerHTML = `
+                    <h3>${model.name}</h3>
+                    <p>${model.description}</p>
+                    <div class="model-info">
+                        <span><strong>Size:</strong> ${model.size || 'Loading...'}</span>
+                        <span><strong>Downloads:</strong> ${downloadCount}</span>
+                        <span><strong>Format:</strong> .rbxl</span>
+                    </div>
+                    <a href="worlds/${model.filename}" class="download-btn" download 
+                       onclick="registerDownload(${model.id});">
+                        Download
+                    </a>
+                `;
+                
+                container.appendChild(card);
+            }
+            
+            console.log(`✅ Loaded ${models.length} models`);
+        }
+
+        // ===== GET FILE SIZE =====
+        async function getFileSize(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    if (size) {
+                        return formatSize(parseInt(size));
+                    }
+                }
+                return 'Unknown';
+            } catch (error) {
+                return 'Unknown';
+            }
+        }
+
+        // ===== FORMAT SIZE =====
+        function formatSize(bytes) {
+            if (isNaN(bytes)) return 'Unknown';
+            
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            
+            return `${size.toFixed(1)} ${units[unitIndex]}`;
+        }
+
+        // ===== REGISTER DOWNLOAD =====
+        function registerDownload(modelId) {
+            console.log('⬇️ Downloading model:', modelId);
+            
+            // Count download
+            if (!downloads[modelId]) downloads[modelId] = 0;
+            downloads[modelId]++;
+            
+            // Save
+            localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
+            
+            // Update stats
+            updateStats();
+            
+            // Update model display
+            if (currentSection === 'models') {
+                setTimeout(() => loadModels(), 100);
+            }
+            
+            // Let the download proceed naturally
+            return true;
+        }
+
+        // ===== UPDATE STATS =====
+        function updateStats() {
+            // Total models
+            document.getElementById('total-models').textContent = models.length;
+            
+            // Calculate total size
+            let totalBytes = 0;
+            models.forEach(model => {
+                if (model.size && model.size !== 'Unknown') {
+                    const match = model.size.match(/(\d+\.?\d*)\s*(B|KB|MB|GB)/);
+                    if (match) {
+                        let bytes = parseFloat(match[1]);
+                        const unit = match[2];
+                        
+                        if (unit === 'MB') bytes *= 1024 * 1024;
+                        else if (unit === 'KB') bytes *= 1024;
+                        else if (unit === 'GB') bytes *= 1024 * 1024 * 1024;
+                        
+                        totalBytes += bytes;
+                    }
+                }
+            });
+            
+            document.getElementById('total-size').textContent = formatSize(totalBytes);
+        }
+
+        // ===== SAVE SETTINGS =====
+        function saveSettings() {
+            localStorage.setItem('rsm_settings', JSON.stringify(settings));
+        }
+
+        // ===== EXPORT FUNCTIONS =====
+        window.registerDownload = registerDownload;
+
+        // ===== START APP =====
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>
