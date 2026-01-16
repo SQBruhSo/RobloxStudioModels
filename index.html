@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>Roblox Studio Models</title> <!-- TÍTULO AQUÍ, NO DENTRO DE LAS SECCIONES -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -188,29 +189,26 @@
 
     <!-- Contenido principal -->
     <div class="content">
-        <!-- Sección Inicio -->
+        <!-- Sección Home -->
         <section id="home" class="section active">
-            <title>Roblox Studio Models - Home</title>
             <h1>Bienvenido</h1>
-            <p>Portal para descargar mundos creados en Roblox Studio.</p>
-            <p>Selecciona "Mundos" en el menú lateral para ver los mundos disponibles.</p>
-            <p>Selecciona "Configuración" para ver los requisitos del sistema.</p>
+            <p>Portal para descargar modelos creados en Roblox Studio.</p>
+            <p>Selecciona "Models" en el menú lateral para ver los modelos disponibles.</p>
+            <p>Selecciona "Configurations" para ver los requisitos del sistema.</p>
         </section>
 
-        <!-- Sección Modelos -->
+        <!-- Sección Models -->
         <section id="models" class="section">
-            <title>Roblox Studio Models - Models</title>
-            <h1>Mundos Disponibles</h1>
-            <p>Descarga los mundos haciendo clic en el botón "Descargar".</p>
+            <h1>Modelos Disponibles</h1>
+            <p>Descarga los modelos haciendo clic en el botón "Descargar".</p>
             
             <div class="world-container" id="worlds-container">
                 <!-- AQUÍ VAN LOS MUNDOS -->
             </div>
         </section>
 
-        <!-- Sección Configuración -->
+        <!-- Sección Configurations -->
         <section id="configs" class="section">
-            <title>Roblox Studio Models - Configurations</title>
             <h1>Configuración</h1>
             <p>Requisitos y configuración recomendada.</p>
             
@@ -224,11 +222,21 @@
                     <li>¡Listo! Puedes editarlo</li>
                 </ul>
             </div>
+            
+            <div class="config-item">
+                <h3>Requisitos</h3>
+                <ul>
+                    <li>Roblox Studio instalado</li>
+                    <li>Windows 10/11 64-bit</li>
+                    <li>4GB de RAM mínimo</li>
+                    <li>2GB de espacio libre</li>
+                </ul>
+            </div>
         </section>
     </div>
 
     <script>
-        // ===== DATOS DE LOS MUNDOS =====
+        // ===== DATOS DE LOS MODELOS =====
         // MODIFICA ESTO CON TUS MUNDOS
         const mundos = [
             {
@@ -239,8 +247,8 @@
             }
             // Para añadir más mundos:
             // {
-            //     nombre: "Otro Mundo",
-            //     archivo: "otro_mundo.rbxl",
+            //     nombre: "Otro Modelo",
+            //     archivo: "otro_modelo.rbxl",
             //     descripcion: "Descripción aquí",
             //     tamano: "10 MB"
             // }
@@ -253,8 +261,11 @@
             // Configurar navegación
             configurarMenu();
             
-            // Cargar mundos
-            cargarMundos();
+            // Cargar modelos
+            cargarModelos();
+            
+            // Verificar hash de URL
+            verificarHashURL();
         });
 
         // ===== CONFIGURAR MENÚ =====
@@ -276,8 +287,28 @@
                     
                     // Mostrar la sección
                     mostrarSeccion(sectionId);
+                    
+                    // Actualizar URL
+                    window.location.hash = sectionId;
                 });
             });
+        }
+
+        // ===== VERIFICAR HASH DE URL =====
+        function verificarHashURL() {
+            const hash = window.location.hash.substring(1);
+            if (hash && ['home', 'models', 'configs'].includes(hash)) {
+                // Actualizar menú
+                document.querySelectorAll('.menu-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === hash) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Mostrar sección
+                mostrarSeccion(hash);
+            }
         }
 
         // ===== MOSTRAR SECCIÓN =====
@@ -294,32 +325,32 @@
             if (seccion) {
                 seccion.classList.add('active');
                 
-                // Si es "Mundos", recargar mundos
-                if (id === 'mundos') {
-                    cargarMundos();
+                // Si es "models", cargar modelos
+                if (id === 'models') {
+                    cargarModelos();
                 }
             }
         }
 
-        // ===== CARGAR MUNDOS =====
-        function cargarMundos() {
+        // ===== CARGAR MODELOS =====
+        function cargarModelos() {
             const container = document.getElementById('worlds-container');
             
             if (!container) {
-                console.error("No se encontró el contenedor de mundos");
+                console.error("No se encontró el contenedor de modelos");
                 return;
             }
             
             // Limpiar contenedor
             container.innerHTML = '';
             
-            // Si no hay mundos
+            // Si no hay modelos
             if (mundos.length === 0) {
-                container.innerHTML = '<p style="color: #888;">No hay mundos disponibles.</p>';
+                container.innerHTML = '<p style="color: #888; padding: 20px; background: #2a2a2a; border-radius: 8px;">No hay modelos disponibles.</p>';
                 return;
             }
             
-            // Crear tarjeta para cada mundo
+            // Crear tarjeta para cada modelo
             mundos.forEach(mundo => {
                 const card = document.createElement('div');
                 card.className = 'world-card';
@@ -339,7 +370,7 @@
                 container.appendChild(card);
             });
             
-            console.log("Mundos cargados:", mundos.length);
+            console.log("Modelos cargados:", mundos.length);
         }
 
         // ===== PARA DEPURACIÓN =====
