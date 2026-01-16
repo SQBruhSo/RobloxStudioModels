@@ -181,9 +181,9 @@
     <div class="sidebar">
         <h2>Roblox Worlds</h2>
         <nav class="menu">
-            <a href="#inicio" class="menu-link active">Inicio</a>
-            <a href="#mundos" class="menu-link">Mundos</a>
-            <a href="#config" class="menu-link">Configuración</a>
+            <a href="#inicio" class="menu-link active" data-section="inicio">Inicio</a>
+            <a href="#mundos" class="menu-link" data-section="mundos">Mundos</a>
+            <a href="#config" class="menu-link" data-section="config">Configuración</a>
         </nav>
     </div>
 
@@ -203,7 +203,7 @@
             <p>Descarga los mundos haciendo clic en el botón "Descargar".</p>
             
             <div class="world-container" id="worlds-container">
-                <!-- Los mundos se cargan aquí con JavaScript -->
+                <!-- AQUÍ VAN LOS MUNDOS -->
             </div>
         </section>
 
@@ -247,6 +247,123 @@
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ===== DATOS DE LOS MUNDOS =====
+        // MODIFICA ESTO CON TUS MUNDOS
+        const mundos = [
+            {
+                nombre: "Custom Chat System",
+                archivo: "CustomChatSystem.rbxl",  // Nombre exacto de tu archivo
+                descripcion: "Sistema de chat personalizado para Roblox con comandos y configuración avanzada.",
+                tamano: "5.7 MB"  // CAMBIA AL TAMAÑO REAL
+            }
+            // Para añadir más mundos:
+            // {
+            //     nombre: "Otro Mundo",
+            //     archivo: "otro_mundo.rbxl",
+            //     descripcion: "Descripción aquí",
+            //     tamano: "10 MB"
+            // }
+        ];
+
+        // ===== CUANDO LA PÁGINA CARGA =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Página cargada");
+            
+            // Configurar navegación
+            configurarMenu();
+            
+            // Cargar mundos
+            cargarMundos();
+        });
+
+        // ===== CONFIGURAR MENÚ =====
+        function configurarMenu() {
+            const links = document.querySelectorAll('.menu-link');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();  // Evitar que la página se recargue
+                    
+                    // Quitar 'active' de todos
+                    links.forEach(l => l.classList.remove('active'));
+                    
+                    // Añadir 'active' a este
+                    this.classList.add('active');
+                    
+                    // Obtener la sección a mostrar
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Mostrar la sección
+                    mostrarSeccion(sectionId);
+                });
+            });
+        }
+
+        // ===== MOSTRAR SECCIÓN =====
+        function mostrarSeccion(id) {
+            console.log("Mostrando sección:", id);
+            
+            // Ocultar todas
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar la seleccionada
+            const seccion = document.getElementById(id);
+            if (seccion) {
+                seccion.classList.add('active');
+                
+                // Si es "Mundos", recargar mundos
+                if (id === 'mundos') {
+                    cargarMundos();
+                }
+            }
+        }
+
+        // ===== CARGAR MUNDOS =====
+        function cargarMundos() {
+            const container = document.getElementById('worlds-container');
+            
+            if (!container) {
+                console.error("No se encontró el contenedor de mundos");
+                return;
+            }
+            
+            // Limpiar contenedor
+            container.innerHTML = '';
+            
+            // Si no hay mundos
+            if (mundos.length === 0) {
+                container.innerHTML = '<p style="color: #888;">No hay mundos disponibles.</p>';
+                return;
+            }
+            
+            // Crear tarjeta para cada mundo
+            mundos.forEach(mundo => {
+                const card = document.createElement('div');
+                card.className = 'world-card';
+                
+                card.innerHTML = `
+                    <h3>${mundo.nombre}</h3>
+                    <p>${mundo.descripcion}</p>
+                    <div class="world-info">
+                        <span><strong>Tamaño:</strong> ${mundo.tamano}</span>
+                        <span><strong>Formato:</strong> .rbxl</span>
+                    </div>
+                    <a href="worlds/${mundo.archivo}" class="download-btn" download>
+                        Descargar
+                    </a>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            console.log("Mundos cargados:", mundos.length);
+        }
+
+        // ===== PARA DEPURACIÓN =====
+        console.log("Script ejecutado");
+    </script>
 </body>
 </html>
