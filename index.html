@@ -1,378 +1,91 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Mundos Roblox</title>
+    <title>Mundos Roblox</title>
     <style>
-        /* ===== RESET Y BASE ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background: #1a1a2e;
-            color: white;
-            min-height: 100vh;
-        }
-        
-        /* ===== CONTENEDOR PRINCIPAL ===== */
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* ===== BARRA LATERAL ===== */
-        .sidebar {
-            width: 200px;
-            background: #0d0d1a;
-            padding: 20px;
-            position: fixed;
-            height: 100vh;
-            border-right: 2px solid #00adb5;
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 173, 181, 0.3);
-        }
-        
-        .logo h1 {
-            color: #00adb5;
-            font-size: 1.4rem;
-        }
-        
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .menu-item {
-            color: white;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 6px;
-            transition: 0.3s;
-            display: block;
-        }
-        
-        .menu-item:hover {
-            background: rgba(0, 173, 181, 0.2);
-        }
-        
-        .menu-item.active {
-            background: #00adb5;
-            font-weight: bold;
-        }
-        
-        /* ===== CONTENIDO PRINCIPAL ===== */
-        .main {
-            flex: 1;
-            margin-left: 200px;
-            padding: 20px;
-            max-width: 1000px;
-        }
-        
-        .section {
-            display: none;
-            animation: aparecer 0.5s;
-        }
-        
-        .section.active {
-            display: block;
-        }
-        
-        @keyframes aparecer {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        h2 {
-            color: #00adb5;
-            margin-bottom: 10px;
-            font-size: 1.8rem;
-        }
-        
-        /* ===== TARJETAS ===== */
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid rgba(0, 173, 181, 0.2);
-        }
-        
-        .card h3 {
-            color: #00adb5;
-            margin-bottom: 10px;
-        }
-        
-        .card p {
-            margin: 8px 0;
-            color: #ccc;
-            line-height: 1.5;
-        }
-        
-        /* ===== GRID DE MUNDOS ===== */
-        .mundos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-        
-        .mundo-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 18px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        
-        .mundo-card:hover {
-            transform: translateY(-3px);
-            border-color: #00adb5;
-            box-shadow: 0 5px 12px rgba(0, 173, 181, 0.2);
-        }
-        
-        .mundo-card h3 {
-            color: #00adb5;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .mundo-card .desc {
-            color: #aaa;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        
-        .mundo-info {
-            display: flex;
-            justify-content: space-between;
-            color: #777;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-        }
-        
-        /* ===== BOTONES ===== */
-        .btn-descargar {
-            display: block;
-            background: #00adb5;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-        
-        .btn-descargar:hover {
-            background: #0097a7;
-        }
-        
-        /* ===== MODAL ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-contenido {
-            background: #1a1a2e;
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            border: 2px solid #00adb5;
-            position: relative;
-        }
-        
-        .cerrar-modal {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            color: #00adb5;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        
-        .cerrar-modal:hover {
-            color: white;
-        }
-        
-        #modal-titulo {
-            color: #00adb5;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-        
-        #modal-descripcion {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: #ddd;
-        }
-        
-        .modal-info {
-            display: flex;
-            justify-content: space-between;
-            color: #888;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 15px;
-            }
-            
-            .main {
-                margin-left: 0;
-                padding: 15px;
-            }
-            
-            .container {
-                flex-direction: column;
-            }
-            
-            .menu {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 5px;
-            }
-            
-            .menu-item {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-            
-            .mundos-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        body { font-family: Arial; background: #222; color: white; margin: 0; padding: 20px; }
+        .menu { background: #333; padding: 10px; margin-bottom: 20px; }
+        .menu a { color: white; margin-right: 15px; text-decoration: none; }
+        .menu a:hover { color: #0af; }
+        .mundo { background: #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .mundo h3 { color: #0af; margin: 0 0 10px 0; }
+        .mundo p { margin: 5px 0; color: #ccc; }
+        .btn { background: #0af; color: white; padding: 8px 15px; text-decoration: none; border-radius: 3px; display: inline-block; }
+        .btn:hover { background: #08c; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Barra lateral -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1>Roblox Worlds</h1>
-            </div>
-            
-            <div class="menu">
-                <a href="#inicio" class="menu-item active">Inicio</a>
-                <a href="#mundos" class="menu-item">Mundos</a>
-                <a href="#info" class="menu-item">Información</a>
-            </div>
-        </div>
-
-        <!-- Contenido principal -->
-        <div class="main">
-            <!-- Sección Inicio -->
-            <section id="inicio" class="section active">
-                <h2>Bienvenido</h2>
-                <p>Descarga mundos creados en Roblox Studio</p>
-                
-                <div class="card">
-                    <h3>¿Cómo descargar?</h3>
-                    <p>1. Ve a la sección "Mundos"</p>
-                    <p>2. Elige un mundo que te guste</p>
-                    <p>3. Haz clic en "Ver Detalles" o "Descargar"</p>
-                    <p>4. Abre el archivo .rbxl con Roblox Studio</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Nota importante</h3>
-                    <p>• Necesitas tener Roblox Studio instalado</p>
-                    <p>• Los archivos son seguros y sin virus</p>
-                    <p>• Puedes modificar los mundos a tu gusto</p>
-                </div>
-            </section>
-
-            <!-- Sección Mundos -->
-            <section id="mundos" class="section">
-                <h2>Mundos Disponibles</h2>
-                <p>Haz clic en cualquier mundo para ver más detalles</p>
-                
-                <div id="mundos-container" class="mundos-grid">
-                    <!-- Los mundos se cargan aquí con JavaScript -->
-                </div>
-            </section>
-
-            <!-- Sección Información -->
-            <section id="info" class="section">
-                <h2>Información</h2>
-                
-                <div class="card">
-                    <h3>Requisitos Mínimos</h3>
-                    <p>• Roblox Studio (gratis)</p>
-                    <p>• Windows 7/10/11 o macOS</p>
-                    <p>• 4GB de RAM</p>
-                    <p>• 2GB de espacio libre</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Instrucciones de Uso</h3>
-                    <p>1. Descarga el archivo .rbxl</p>
-                    <p>2. Abre Roblox Studio</p>
-                    <p>3. Menú: Archivo → Abrir</p>
-                    <p>4. Selecciona el archivo descargado</p>
-                    <p>5. ¡Listo! Ya puedes editarlo</p>
-                </div>
-            </section>
-        </div>
+    <div class="menu">
+        <a href="#inicio">Inicio</a>
+        <a href="#mundos">Mundos</a>
+        <a href="#info">Info</a>
     </div>
 
-    <!-- Modal para detalles -->
-    <div id="modal" class="modal">
-        <div class="modal-contenido">
-            <span class="cerrar-modal">×</span>
-            <h2 id="modal-titulo"></h2>
-            <p id="modal-descripcion"></p>
-            
-            <div class="modal-info">
-                <div>
-                    <strong>Tamaño:</strong> <span id="modal-tamano"></span>
-                </div>
-                <div>
-                    <strong>Fecha:</strong> <span id="modal-fecha"></span>
-                </div>
-                <div>
-                    <strong>Descargas:</strong> <span id="modal-descargas">0</span>
-                </div>
-            </div>
-            
-            <a id="modal-descargar" class="btn-descargar" download>
-                DESCARGAR AHORA
-            </a>
-        </div>
+    <div id="inicio">
+        <h1>Mundos Roblox</h1>
+        <p>Descarga mundos para Roblox Studio</p>
+        <p>Ve a la sección "Mundos" para descargar.</p>
     </div>
 
-    <script src="script.js"></script>
+    <div id="mundos" style="display:none;">
+        <h2>Mundos para descargar</h2>
+        <div id="lista-mundos"></div>
+    </div>
+
+    <div id="info" style="display:none;">
+        <h2>Información</h2>
+        <p>1. Descarga el archivo .rbxl</p>
+        <p>2. Abre Roblox Studio</p>
+        <p>3. Archivo → Abrir</p>
+        <p>4. Selecciona el archivo</p>
+        <p>5. ¡Listo!</p>
+    </div>
+
+    <script>
+        // Tus mundos
+        const mundos = [
+            {
+                nombre: "Mi Mundo 1",
+                archivo: "mundo1.rbxl",
+                desc: "Descripción del mundo 1",
+                tamano: "10 MB"
+            },
+            {
+                nombre: "Mi Mundo 2", 
+                archivo: "mundo2.rbxl",
+                desc: "Descripción del mundo 2",
+                tamano: "15 MB"
+            }
+        ];
+
+        // Mostrar mundos
+        const lista = document.getElementById('lista-mundos');
+        mundos.forEach(mundo => {
+            lista.innerHTML += `
+                <div class="mundo">
+                    <h3>${mundo.nombre}</h3>
+                    <p>${mundo.desc}</p>
+                    <p>Tamaño: ${mundo.tamano}</p>
+                    <a href="worlds/${mundo.archivo}" class="btn" download>Descargar</a>
+                </div>
+            `;
+        });
+
+        // Menú simple
+        document.querySelectorAll('.menu a').forEach(enlace => {
+            enlace.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('href').substring(1);
+                
+                // Ocultar todo
+                document.getElementById('inicio').style.display = 'none';
+                document.getElementById('mundos').style.display = 'none';
+                document.getElementById('info').style.display = 'none';
+                
+                // Mostrar seleccionado
+                document.getElementById(id).style.display = 'block';
+            });
+        });
+    </script>
 </body>
 </html>
