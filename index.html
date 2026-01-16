@@ -45,7 +45,6 @@
             left: 0;
             top: 0;
             border-right: 1px solid var(--border-color);
-            transition: background 0.3s;
         }
 
         .sidebar h2 {
@@ -86,7 +85,6 @@
             margin-left: 240px;
             padding: 40px;
             min-height: 100vh;
-            transition: margin-left 0.3s;
         }
 
         .section {
@@ -299,9 +297,9 @@
     <div class="sidebar">
         <h2>Roblox Studio Models</h2>
         <nav class="menu">
-            <a href="#home" class="menu-link active" data-section="home" data-i18n="home">Home</a>
-            <a href="#models" class="menu-link" data-section="models" data-i18n="models">Models</a>
-            <a href="#configs" class="menu-link" data-section="configs" data-i18n="configs">Configs</a>
+            <a href="#home" class="menu-link active" data-section="home">Home</a>
+            <a href="#models" class="menu-link" data-section="models">Models</a>
+            <a href="#configs" class="menu-link" data-section="configs">Configs</a>
         </nav>
     </div>
 
@@ -309,27 +307,27 @@
     <div class="content">
         <!-- Sección Home -->
         <section id="home" class="section active">
-            <h1 data-i18n="welcome">Welcome to RSM</h1>
-            <p data-i18n="welcomeText">Portal to download models created in Roblox Studio.</p>
-            <p data-i18n="selectModels">Select "Models" in the sidebar to view available models.</p>
-            <p data-i18n="selectConfigs">Select "Configs" to customize your experience.</p>
+            <h1>Welcome to RSM</h1>
+            <p>Portal to download models created in Roblox Studio.</p>
+            <p>Select "Models" in the sidebar to view available models.</p>
+            <p>Select "Configs" to customize your experience.</p>
             
             <div class="stats">
                 <div class="stat-card">
                     <div class="stat-value" id="total-models">1</div>
-                    <div class="stat-label" data-i18n="totalModels">Models</div>
+                    <div class="stat-label">Models</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="total-size">0 MB</div>
-                    <div class="stat-label" data-i18n="totalSize">Total Size</div>
+                    <div class="stat-label">Total Size</div>
                 </div>
             </div>
         </section>
 
         <!-- Sección Models -->
         <section id="models" class="section">
-            <h1 data-i18n="availableModels">Available Models</h1>
-            <p data-i18n="clickDownload">Click "Download" to get the .rbxl file.</p>
+            <h1>Available Models</h1>
+            <p>Click "Download" to get the .rbxl file.</p>
             
             <div class="models-container" id="models-container">
                 <!-- Models will be loaded here -->
@@ -338,34 +336,34 @@
 
         <!-- Sección Configs -->
         <section id="configs" class="section">
-            <h1 data-i18n="configuration">Configuration</h1>
-            <p data-i18n="customize">Customize your experience.</p>
+            <h1>Configuration</h1>
+            <p>Customize your experience.</p>
             
             <div class="config-group">
-                <h3 data-i18n="appearance">Appearance</h3>
+                <h3>Appearance</h3>
                 <div class="config-option">
-                    <span data-i18n="darkLight">Dark/Light Mode</span>
+                    <span>Dark/Light Mode</span>
                     <label class="switch">
                         <input type="checkbox" id="theme-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
                 <div class="config-option">
-                    <span data-i18n="primaryColor">Primary Color</span>
+                    <span>Primary Color</span>
                     <select id="color-select">
-                        <option value="#4CAF50" data-i18n="green">Green</option>
-                        <option value="#2196F3" data-i18n="blue">Blue</option>
-                        <option value="#9C27B0" data-i18n="purple">Purple</option>
-                        <option value="#FF9800" data-i18n="orange">Orange</option>
-                        <option value="#F44336" data-i18n="red">Red</option>
+                        <option value="#4CAF50">Green</option>
+                        <option value="#2196F3">Blue</option>
+                        <option value="#9C27B0">Purple</option>
+                        <option value="#FF9800">Orange</option>
+                        <option value="#F44336">Red</option>
                     </select>
                 </div>
             </div>
             
             <div class="config-group">
-                <h3 data-i18n="language">Language</h3>
+                <h3>Language</h3>
                 <div class="config-option">
-                    <span data-i18n="interfaceLanguage">Interface Language</span>
+                    <span>Interface Language</span>
                     <select id="language-select">
                         <option value="en">English</option>
                         <option value="es">Español</option>
@@ -375,13 +373,13 @@
             </div>
             
             <div class="config-group">
-                <h3 data-i18n="data">Data</h3>
+                <h3>Data</h3>
                 <div class="config-option">
-                    <span data-i18n="resetCounters">Reset Download Counters</span>
+                    <span>Reset Download Counters</span>
                     <button id="reset-btn" class="download-btn" style="padding: 8px 15px; font-size: 0.9em;">Reset</button>
                 </div>
                 <div class="config-option">
-                    <span data-i18n="autoDetect">Auto-detect file sizes</span>
+                    <span>Auto-detect file sizes</span>
                     <label class="switch">
                         <input type="checkbox" id="auto-size" checked>
                         <span class="slider"></span>
@@ -391,6 +389,349 @@
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ===== MODELS DATA =====
+        const models = [
+            {
+                id: 1,
+                name: "Custom Chat System",
+                filename: "CustomChatSystem.rbxl",  // Nombre de TU archivo
+                description: "Custom chat system for Roblox with advanced commands and configuration.",
+                size: null // Se detectará automáticamente
+            }
+        ];
+
+        // ===== APP STATE =====
+        let currentSection = 'home';
+        let downloads = JSON.parse(localStorage.getItem('rsm_downloads') || '{}');
+        let settings = JSON.parse(localStorage.getItem('rsm_settings') || '{}');
+
+        // ===== WHEN PAGE LOADS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("RSM Loading...");
+            
+            // Apply saved settings
+            applySettings();
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Load models
+            loadModels(true);
+            
+            // Update stats
+            updateStats();
+            
+            // Check URL
+            checkUrlHash();
+            
+            console.log("RSM Ready!");
+        });
+
+        // ===== APPLY SETTINGS =====
+        function applySettings() {
+            // Theme
+            if (settings.theme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('theme-toggle').checked = true;
+            }
+            
+            // Color
+            if (settings.primaryColor) {
+                document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
+                document.getElementById('color-select').value = settings.primaryColor;
+                updateHoverColor(settings.primaryColor);
+            }
+            
+            // Language
+            if (settings.language) {
+                document.getElementById('language-select').value = settings.language;
+            }
+            
+            // Auto-size
+            if (settings.autoSize !== undefined) {
+                document.getElementById('auto-size').checked = settings.autoSize;
+            }
+        }
+
+        // ===== UPDATE HOVER COLOR =====
+        function updateHoverColor(color) {
+            // Simple darken function for hover
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            
+            const darken = 20; // 20% más oscuro
+            const hoverR = Math.max(0, r - darken);
+            const hoverG = Math.max(0, g - darken);
+            const hoverB = Math.max(0, b - darken);
+            
+            const hoverColor = `#${hoverR.toString(16).padStart(2, '0')}${hoverG.toString(16).padStart(2, '0')}${hoverB.toString(16).padStart(2, '0')}`;
+            document.documentElement.style.setProperty('--primary-hover', hoverColor);
+        }
+
+        // ===== SETUP NAVIGATION =====
+        function setupNavigation() {
+            // Menu links
+            const links = document.querySelectorAll('.menu-link');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active
+                    links.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show section
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // Update URL
+                    window.location.hash = section;
+                });
+            });
+            
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('light-mode');
+                    settings.theme = 'light';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    settings.theme = 'dark';
+                }
+                // Re-apply color for light mode
+                if (settings.primaryColor) {
+                    updateHoverColor(settings.primaryColor);
+                }
+                saveSettings();
+            });
+            
+            // Color select
+            document.getElementById('color-select').addEventListener('change', function() {
+                const color = this.value;
+                document.documentElement.style.setProperty('--primary-color', color);
+                updateHoverColor(color);
+                settings.primaryColor = color;
+                saveSettings();
+            });
+            
+            // Language select
+            document.getElementById('language-select').addEventListener('change', function() {
+                settings.language = this.value;
+                saveSettings();
+                // In real app, you would update all texts here
+            });
+            
+            // Reset button
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                if (confirm('Reset all download counters?')) {
+                    downloads = {};
+                    localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
+                    loadModels();
+                    updateStats();
+                    alert('Counters reset!');
+                }
+            });
+            
+            // Auto-size toggle
+            document.getElementById('auto-size').addEventListener('change', function() {
+                settings.autoSize = this.checked;
+                saveSettings();
+                if (this.checked) {
+                    loadModels(true);
+                }
+            });
+        }
+
+        // ===== CHECK URL HASH =====
+        function checkUrlHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash && ['home', 'models', 'configs'].includes(hash)) {
+                // Update menu
+                document.querySelectorAll('.menu-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === hash) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Show section
+                showSection(hash);
+            }
+        }
+
+        // ===== SHOW SECTION =====
+        function showSection(section) {
+            // Hide all
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            // Show selected
+            const target = document.getElementById(section);
+            if (target) {
+                target.classList.add('active');
+                currentSection = section;
+                
+                // Update title
+                document.title = `RSM - ${section.charAt(0).toUpperCase() + section.slice(1)}`;
+                
+                // Load models if needed
+                if (section === 'models') {
+                    loadModels();
+                }
+                
+                // Update stats if needed
+                if (section === 'home') {
+                    updateStats();
+                }
+            }
+        }
+
+        // ===== LOAD MODELS =====
+        async function loadModels(detectSize = false) {
+            const container = document.getElementById('models-container');
+            
+            if (!container) {
+                console.error("No container found");
+                return;
+            }
+            
+            // Clear
+            container.innerHTML = '';
+            
+            // No models
+            if (models.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">No models available.</p>';
+                return;
+            }
+            
+            // Load each model
+            for (let model of models) {
+                // Detect size if needed
+                if (detectSize && settings.autoSize !== false) {
+                    try {
+                        const size = await getFileSize(`worlds/${model.filename}`);
+                        model.size = size;
+                    } catch (error) {
+                        model.size = 'Unknown';
+                    }
+                }
+                
+                // Create card
+                const card = document.createElement('div');
+                card.className = 'model-card';
+                
+                const downloadCount = downloads[model.id] || 0;
+                
+                card.innerHTML = `
+                    <h3>${model.name}</h3>
+                    <p>${model.description}</p>
+                    <div class="model-info">
+                        <span><strong>Size:</strong> ${model.size || 'Loading...'}</span>
+                        <span><strong>Downloads:</strong> ${downloadCount}</span>
+                        <span><strong>Format:</strong> .rbxl</span>
+                    </div>
+                    <a href="worlds/${model.filename}" class="download-btn" download 
+                       onclick="registerDownload(${model.id}); return true;">
+                        Download
+                    </a>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+
+        // ===== GET FILE SIZE =====
+        async function getFileSize(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    if (size) {
+                        return formatSize(parseInt(size));
+                    }
+                }
+                return 'Unknown';
+            } catch (error) {
+                console.error('Error getting size:', error);
+                return 'Unknown';
+            }
+        }
+
+        // ===== FORMAT SIZE =====
+        function formatSize(bytes) {
+            if (!bytes || isNaN(bytes)) return 'Unknown';
+            
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            
+            return `${size.toFixed(1)} ${units[unitIndex]}`;
+        }
+
+        // ===== REGISTER DOWNLOAD =====
+        function registerDownload(modelId) {
+            // Count download
+            if (!downloads[modelId]) downloads[modelId] = 0;
+            downloads[modelId]++;
+            
+            // Save
+            localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
+            
+            // Update
+            updateStats();
+            
+            // Reload models to update counter
+            setTimeout(() => {
+                if (currentSection === 'models') {
+                    loadModels();
+                }
+            }, 100);
+            
+            console.log(`Downloaded model ${modelId}`);
+        }
+
+        // ===== UPDATE STATS =====
+        function updateStats() {
+            // Total models
+            document.getElementById('total-models').textContent = models.length;
+            
+            // Total size (simplified)
+            let totalBytes = 0;
+            models.forEach(model => {
+                if (model.size && model.size !== 'Unknown') {
+                    const match = model.size.match(/(\d+\.?\d*)\s*(B|KB|MB|GB)/);
+                    if (match) {
+                        let bytes = parseFloat(match[1]);
+                        const unit = match[2];
+                        
+                        if (unit === 'MB') bytes *= 1024 * 1024;
+                        else if (unit === 'KB') bytes *= 1024;
+                        else if (unit === 'GB') bytes *= 1024 * 1024 * 1024;
+                        
+                        totalBytes += bytes;
+                    }
+                }
+            });
+            
+            document.getElementById('total-size').textContent = formatSize(totalBytes);
+        }
+
+        // ===== SAVE SETTINGS =====
+        function saveSettings() {
+            localStorage.setItem('rsm_settings', JSON.stringify(settings));
+        }
+
+        // ===== DEBUG =====
+        console.log("RSM Script Loaded");
+    </script>
 </body>
 </html>
