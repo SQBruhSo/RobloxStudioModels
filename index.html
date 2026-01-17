@@ -272,9 +272,10 @@
         }
 
         .feature-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            object-fit: contain;
         }
 
         .feature-card h3 {
@@ -283,72 +284,6 @@
 
         .feature-card p {
             font-size: calc(var(--font-size) * 0.9);
-        }
-
-        .quick-stats {
-            background: var(--card-color);
-            padding: 25px;
-            border-radius: 10px;
-            margin: 30px 0;
-            border: 1px solid var(--border-color);
-        }
-
-        .quick-stats h2 {
-            margin-bottom: 20px;
-        }
-
-        .recent-models {
-            background: var(--card-color);
-            padding: 25px;
-            border-radius: 10px;
-            margin: 30px 0;
-            border: 1px solid var(--border-color);
-        }
-
-        .recent-models h2 {
-            margin-bottom: 20px;
-        }
-
-        .model-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .model-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: var(--bg-color);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .model-item-info h4 {
-            margin: 0 0 5px 0;
-            color: var(--text-color);
-        }
-
-        .model-item-info p {
-            margin: 0;
-            font-size: calc(var(--font-size) * 0.85);
-        }
-
-        .view-all-btn {
-            display: inline-block;
-            background: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background 0.3s;
-            margin-top: 15px;
-        }
-
-        .view-all-btn:hover {
-            background: var(--primary-hover);
         }
 
         .info-cards {
@@ -367,36 +302,6 @@
 
         .info-card h3 {
             margin-top: 0;
-        }
-
-        .update-log {
-            background: var(--card-color);
-            padding: 25px;
-            border-radius: 10px;
-            margin: 30px 0;
-            border: 1px solid var(--border-color);
-        }
-
-        .update-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .update-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .update-date {
-            font-size: calc(var(--font-size) * 0.85);
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-        }
-
-        .update-description {
-            margin: 0;
         }
 
         @media (max-width: 768px) {
@@ -479,22 +384,22 @@
             <!-- Características principales -->
             <div class="features">
                 <div class="feature-card">
-                    <div class="feature-icon">🎮</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/686/686589.png" class="feature-icon" alt="Game Ready">
                     <h3>Game Ready</h3>
                     <p>All models are tested and ready to use in your Roblox games immediately.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/9296/9296485.png" class="feature-icon" alt="Optimized">
                     <h3>Optimized</h3>
                     <p>Models are optimized for performance with clean code and efficient design.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🆓</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/929/929538.png" class="feature-icon" alt="Free to Use">
                     <h3>Free to Use</h3>
                     <p>All models are completely free for personal and commercial projects.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📚</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" class="feature-icon" alt="Documented">
                     <h3>Documented</h3>
                     <p>Each model includes documentation and usage instructions.</p>
                 </div>
@@ -516,31 +421,6 @@
                     <p>• Environment Assets</p>
                     <p>• Script Libraries</p>
                     <p>• More coming soon...</p>
-                </div>
-            </div>
-
-            <!-- Modelos recientes -->
-            <div class="recent-models">
-                <h2>Recently Added Models</h2>
-                <div class="model-list" id="recent-models-list">
-                    <!-- Recent models will be loaded here -->
-                </div>
-                <a href="#" class="view-all-btn" onclick="showSection('models'); return false;">View All Models</a>
-            </div>
-
-            <!-- Log de actualizaciones -->
-            <div class="update-log">
-                <h2>Recent Updates</h2>
-                <div class="update-item">
-                    <div class="update-date">December 2023</div>
-                    <p class="update-description">• Added Custom Chat System model with advanced features</p>
-                    <p class="update-description">• Improved website performance and user interface</p>
-                    <p class="update-description">• Added download tracking and statistics</p>
-                </div>
-                <div class="update-item">
-                    <div class="update-date">November 2023</div>
-                    <p class="update-description">• Launched RSM website</p>
-                    <p class="update-description">• Initial model collection available</p>
                 </div>
             </div>
 
@@ -678,7 +558,6 @@
             // Update statistics if necessary
             if (sectionId === 'home') {
                 updateStats();
-                loadRecentModels();
             }
         }
 
@@ -691,9 +570,6 @@
             
             // Update statistics
             updateStats();
-            
-            // Load recent models
-            loadRecentModels();
             
             console.log('✅ RSM initialized');
         }
@@ -710,39 +586,6 @@
                         showSection(sectionId);
                     }
                 });
-            });
-        }
-
-        // ===== LOAD RECENT MODELS =====
-        function loadRecentModels() {
-            const container = document.getElementById('recent-models-list');
-            
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            // Ordenar modelos por fecha (más reciente primero)
-            const sortedModels = [...models].sort((a, b) => {
-                return new Date(b.addedDate) - new Date(a.addedDate);
-            });
-            
-            // Mostrar hasta 3 modelos más recientes
-            const recentModels = sortedModels.slice(0, 3);
-            
-            recentModels.forEach(model => {
-                const downloadCount = downloads[model.id] || 0;
-                
-                const item = document.createElement('div');
-                item.className = 'model-item';
-                item.innerHTML = `
-                    <div class="model-item-info">
-                        <h4>${model.name}</h4>
-                        <p>${model.category} • ${downloadCount} downloads</p>
-                    </div>
-                    <a href="#" class="link-btn" onclick="showSection('models'); return false;">View</a>
-                `;
-                
-                container.appendChild(item);
             });
         }
 
