@@ -6,18 +6,6 @@
     <title>RSM - Home</title>
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --sidebar-color: #252525;
-            --card-color: #2a2a2a;
-            --text-color: #ffffff;
-            --text-secondary: #cccccc;
-            --primary-color: #4CAF50;
-            --primary-hover: #45a049;
-            --border-color: #333333;
-            --font-size: 16px;
-        }
-
-        body.light-mode {
             --bg-color: #f5f5f5;
             --sidebar-color: #e0e0e0;
             --card-color: #ffffff;
@@ -26,6 +14,7 @@
             --primary-color: #4CAF50;
             --primary-hover: #45a049;
             --border-color: #d6d6d6;
+            --font-size: 16px;
         }
 
         body {
@@ -101,19 +90,6 @@
             height: 20px;
             flex-shrink: 0;
             transition: filter 0.3s;
-            /* En modo oscuro, invertir colores del icono */
-            filter: brightness(0) invert(1);
-        }
-
-        body.light-mode .menu-icon {
-            /* En modo claro, mostrar iconos normales */
-            filter: none;
-        }
-
-        body.light-mode .menu-item:hover .menu-icon,
-        body.light-mode .menu-item.active .menu-icon {
-            /* En modo claro, solo invertir en hover/active */
-            filter: brightness(0) invert(1);
         }
 
         .menu-text {
@@ -245,106 +221,6 @@
             background: var(--primary-hover);
         }
 
-        .config-group {
-            background: var(--card-color);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            max-width: 600px;
-            border: 1px solid var(--border-color);
-        }
-
-        .config-group h3 {
-            color: var(--primary-color);
-            margin: 0 0 15px 0;
-        }
-
-        .config-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .config-option:last-child {
-            border-bottom: none;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .font-size-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .font-size-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .font-size-btn:hover {
-            background: var(--primary-hover);
-        }
-
-        .font-size-value {
-            min-width: 40px;
-            text-align: center;
-        }
-
         .stats {
             display: flex;
             gap: 20px;
@@ -419,10 +295,6 @@
                 <img src="https://cdn-icons-png.freepik.com/512/9046/9046107.png" class="menu-icon" alt="Links">
                 <span class="menu-text">Links</span>
             </a>
-            <a href="#" class="menu-item" onclick="showSection('settings'); return false;">
-                <img src="https://cdn-icons-png.freepik.com/512/9046/9046107.png" class="menu-icon" alt="Settings">
-                <span class="menu-text">Settings</span>
-            </a>
         </nav>
     </div>
 
@@ -434,7 +306,6 @@
             <p>Portal to download models created in Roblox Studio.</p>
             <p>Select "Models" in the sidebar to download available models.</p>
             <p>Select "Links" to find me on other platforms.</p>
-            <p>Select "Settings" to customize your experience.</p>
             
             <div class="stats">
                 <div class="stat-card">
@@ -485,35 +356,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Sección Settings -->
-        <section id="settings" class="section">
-            <h1>Settings</h1>
-            <p>Customize your experience.</p>
-            
-            <div class="config-group">
-                <h3>Appearance</h3>
-                <div class="config-option">
-                    <span>Dark/Light Mode</span>
-                    <label class="switch">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="config-group">
-                <h3>Text Size</h3>
-                <div class="config-option">
-                    <span>Font Size</span>
-                    <div class="font-size-control">
-                        <button class="font-size-btn" onclick="changeFontSize(-1)">A-</button>
-                        <span class="font-size-value" id="font-size-value">16px</span>
-                        <button class="font-size-btn" onclick="changeFontSize(1)">A+</button>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <script>
@@ -531,23 +373,10 @@
         // ===== APP STATE =====
         let currentSection = 'home';
         let downloads = JSON.parse(localStorage.getItem('rsm_downloads') || '{}');
-        let settings = JSON.parse(localStorage.getItem('rsm_settings') || '{}');
-
-        // Default settings
-        const defaultSettings = {
-            theme: 'dark',
-            fontSize: 16
-        };
 
         // ===== INITIALIZE APP =====
         function initApp() {
             console.log('🚀 Initializing RSM...');
-            
-            // Merge with default settings
-            settings = { ...defaultSettings, ...settings };
-            
-            // Apply saved settings
-            applySettings();
             
             // Setup navigation
             setupNavigation();
@@ -561,57 +390,8 @@
             console.log('✅ RSM initialized');
         }
 
-        // ===== APPLY SETTINGS =====
-        function applySettings() {
-            // Apply theme
-            if (settings.theme === 'light') {
-                document.body.classList.add('light-mode');
-                document.getElementById('theme-toggle').checked = true;
-            } else {
-                document.body.classList.remove('light-mode');
-                document.getElementById('theme-toggle').checked = false;
-            }
-            
-            // Apply font size
-            applyFontSize(settings.fontSize);
-        }
-
-        // ===== APPLY FONT SIZE =====
-        function applyFontSize(size) {
-            // Validate size
-            size = Math.max(12, Math.min(24, size));
-            settings.fontSize = size;
-            
-            // Apply to CSS variable
-            document.documentElement.style.setProperty('--font-size', `${size}px`);
-            
-            // Update display
-            document.getElementById('font-size-value').textContent = `${size}px`;
-            
-            // Save settings
-            saveSettings();
-        }
-
-        // ===== CHANGE FONT SIZE =====
-        function changeFontSize(change) {
-            const newSize = settings.fontSize + change;
-            applyFontSize(newSize);
-        }
-
         // ===== SETUP NAVIGATION =====
         function setupNavigation() {
-            // Theme toggle
-            document.getElementById('theme-toggle').addEventListener('change', function() {
-                if (this.checked) {
-                    document.body.classList.add('light-mode');
-                    settings.theme = 'light';
-                } else {
-                    document.body.classList.remove('light-mode');
-                    settings.theme = 'dark';
-                }
-                saveSettings();
-            });
-            
             // Update menu items to work with new structure
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => {
@@ -662,4 +442,124 @@
             }
         }
 
-     
+        // ===== LOAD MODELS =====
+        async function loadModels() {
+            const container = document.getElementById('models-container');
+            
+            if (!container) {
+                console.error('❌ No container found!');
+                return;
+            }
+            
+            console.log('📦 Loading models...');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Check if we have models
+            if (models.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">No models available.</p>';
+                return;
+            }
+            
+            // Create model cards
+            for (let model of models) {
+                // Detect size automatically
+                try {
+                    const size = await getFileSize(`worlds/${model.filename}`);
+                    model.size = size;
+                } catch (error) {
+                    model.size = 'Unknown';
+                }
+                
+                // Create card
+                const card = document.createElement('div');
+                card.className = 'model-card';
+                
+                const downloadCount = downloads[model.id] || 0;
+                
+                card.innerHTML = `
+                    <h3>${model.name}</h3>
+                    <p>${model.description}</p>
+                    <div class="model-info">
+                        <span><strong>Size:</strong> ${model.size || 'Loading...'}</span>
+                        <span><strong>Downloads:</strong> ${downloadCount}</span>
+                        <span><strong>Format:</strong> .rbxl</span>
+                    </div>
+                    <a href="worlds/${model.filename}" class="download-btn" download 
+                       onclick="registerDownload(${model.id});">
+                        Download
+                    </a>
+                `;
+                
+                container.appendChild(card);
+            }
+            
+            console.log(`✅ Loaded ${models.length} models`);
+        }
+
+        // ===== GET FILE SIZE =====
+        async function getFileSize(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    if (size) {
+                        return formatSize(parseInt(size));
+                    }
+                }
+                return 'Unknown';
+            } catch (error) {
+                return 'Unknown';
+            }
+        }
+
+        // ===== FORMAT SIZE =====
+        function formatSize(bytes) {
+            if (isNaN(bytes)) return 'Unknown';
+            
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            
+            return `${size.toFixed(1)} ${units[unitIndex]}`;
+        }
+
+        // ===== REGISTER DOWNLOAD =====
+        function registerDownload(modelId) {
+            console.log('⬇️ Downloading model:', modelId);
+            
+            // Count download
+            if (!downloads[modelId]) downloads[modelId] = 0;
+            downloads[modelId]++;
+            
+            // Save
+            localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
+            
+            // Update stats
+            updateStats();
+            
+            // Update model display
+            if (currentSection === 'models') {
+                setTimeout(() => loadModels(), 100);
+            }
+            
+            return true;
+        }
+
+        // ===== UPDATE STATS =====
+        function updateStats() {
+            // Total models
+            document.getElementById('total-models').textContent = models.length;
+        }
+
+        // ===== START APP =====
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
