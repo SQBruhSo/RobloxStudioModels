@@ -5,9 +5,9 @@ const models = [
         name: "Custom Chat System",
         filename: "CustomChatSystem.rbxl",
         description: "This chat system is fully customizable and designed to integrate easily into your projects. Make sure to follow the rules provided to avoid errors or conflicts within the system.",
-        size: "1.2 MB", // Tamaño fijo en lugar de calcularlo dinámicamente
+        size: "138 KB",
         category: "Game Systems",
-        addedDate: "2023-12-15"
+        addedDate: "2025-01-16"
     }
 ];
 
