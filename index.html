@@ -284,15 +284,15 @@
         <h2>Roblox Studio Models</h2>
         <nav class="menu">
             <a href="#" class="menu-item active" data-section="home">
-                <img src="house.png" alt="Descripción de la imagen" class="menu-icon">
+                <img src="https://cdn-icons-png.freepik.com/512/9046/9046107.png" class="menu-icon" alt="Home">
                 <span class="menu-text">Home</span>
             </a>
             <a href="#" class="menu-item" data-section="models">
-                <img src="models.png" class="menu-icon">
+                <img src="https://cdn-icons-png.freepik.com/512/9046/9046107.png" class="menu-icon" alt="Models">
                 <span class="menu-text">Models</span>
             </a>
             <a href="#" class="menu-item" data-section="links">
-                <img src="links.png" class="menu-icon" alt="Links">
+                <img src="https://cdn-icons-png.freepik.com/512/9046/9046107.png" class="menu-icon" alt="Links">
                 <span class="menu-text">Links</span>
             </a>
         </nav>
@@ -373,65 +373,65 @@
         // ===== APP STATE =====
         let currentSection = 'home';
         let downloads = JSON.parse(localStorage.getItem('rsm_downloads') || '{}');
-        let modelsLoaded = false; // Bandera para evitar carga duplicada
+        let modelsLoaded = false; // Flag to avoid duplicate loading
 
-        // ===== FUNCIÓN PARA MOSTRAR SECCIÓN =====
+        // ===== FUNCTION TO SHOW SECTION =====
         function showSection(sectionId) {
-            console.log('Mostrando sección:', sectionId);
+            console.log('Showing section:', sectionId);
             
-            // Actualizar sección actual
+            // Update current section
             currentSection = sectionId;
             
-            // Ocultar todas las secciones
+            // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Mostrar la sección seleccionada
+            // Show selected section
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
             
-            // Actualizar menú activo
+            // Update active menu
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Encontrar y activar el elemento del menú correspondiente
+            // Find and activate the corresponding menu item
             document.querySelector(`.menu-item[data-section="${sectionId}"]`).classList.add('active');
             
-            // Actualizar título
+            // Update title
             document.title = `RSM - ${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}`;
             
-            // Cargar modelos si es necesario (solo una vez)
+            // Load models if necessary (only once)
             if (sectionId === 'models' && !modelsLoaded) {
                 loadModels();
                 modelsLoaded = true;
             }
             
-            // Actualizar estadísticas si es necesario
+            // Update statistics if necessary
             if (sectionId === 'home') {
                 updateStats();
             }
         }
 
-        // ===== INICIALIZAR APP =====
+        // ===== INITIALIZE APP =====
         function initApp() {
-            console.log('🚀 Inicializando RSM...');
+            console.log('🚀 Initializing RSM...');
             
-            // Configurar eventos de navegación
+            // Setup navigation
             setupNavigation();
             
-            // Actualizar estadísticas
+            // Update statistics
             updateStats();
             
-            console.log('✅ RSM inicializado');
+            console.log('✅ RSM initialized');
         }
 
-        // ===== CONFIGURAR NAVEGACIÓN =====
+        // ===== SETUP NAVIGATION =====
         function setupNavigation() {
-            // Agregar eventos a los elementos del menú
+            // Add events to menu items
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => {
                 item.addEventListener('click', function(e) {
@@ -444,38 +444,38 @@
             });
         }
 
-        // ===== CARGAR MODELOS =====
+        // ===== LOAD MODELS =====
         async function loadModels() {
             const container = document.getElementById('models-container');
             
             if (!container) {
-                console.error('❌ No se encontró el contenedor de modelos!');
+                console.error('❌ Models container not found!');
                 return;
             }
             
-            console.log('📦 Cargando modelos...');
+            console.log('📦 Loading models...');
             
-            // Limpiar contenedor
+            // Clear container
             container.innerHTML = '';
             
-            // Verificar si hay modelos
+            // Check if we have models
             if (models.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">No hay modelos disponibles.</p>';
+                container.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">No models available.</p>';
                 return;
             }
             
-            // Crear tarjetas de modelos
+            // Create model cards
             for (let model of models) {
-                // Detectar tamaño automáticamente
+                // Detect size automatically
                 try {
                     const size = await getFileSize(`worlds/${model.filename}`);
                     model.size = size;
                 } catch (error) {
-                    console.log('Error obteniendo tamaño:', error);
-                    model.size = 'Desconocido';
+                    console.log('Error getting size:', error);
+                    model.size = 'Unknown';
                 }
                 
-                // Crear tarjeta
+                // Create card
                 const card = document.createElement('div');
                 card.className = 'model-card';
                 
@@ -485,23 +485,23 @@
                     <h3>${model.name}</h3>
                     <p>${model.description}</p>
                     <div class="model-info">
-                        <span><strong>Tamaño:</strong> ${model.size || 'Cargando...'}</span>
-                        <span><strong>Descargas:</strong> ${downloadCount}</span>
-                        <span><strong>Formato:</strong> .rbxl</span>
+                        <span><strong>Size:</strong> ${model.size || 'Loading...'}</span>
+                        <span><strong>Downloads:</strong> ${downloadCount}</span>
+                        <span><strong>Format:</strong> .rbxl</span>
                     </div>
                     <a href="worlds/${model.filename}" class="download-btn" download 
                        onclick="registerDownload(${model.id}); return true;">
-                        Descargar
+                        Download
                     </a>
                 `;
                 
                 container.appendChild(card);
             }
             
-            console.log(`✅ Cargados ${models.length} modelos`);
+            console.log(`✅ Loaded ${models.length} models`);
         }
 
-        // ===== OBTENER TAMAÑO DE ARCHIVO =====
+        // ===== GET FILE SIZE =====
         async function getFileSize(url) {
             try {
                 const response = await fetch(url, { method: 'HEAD' });
@@ -511,16 +511,16 @@
                         return formatSize(parseInt(size));
                     }
                 }
-                return 'Desconocido';
+                return 'Unknown';
             } catch (error) {
-                console.error('Error obteniendo tamaño del archivo:', error);
-                return 'Desconocido';
+                console.error('Error getting file size:', error);
+                return 'Unknown';
             }
         }
 
-        // ===== FORMATEAR TAMAÑO =====
+        // ===== FORMAT SIZE =====
         function formatSize(bytes) {
-            if (isNaN(bytes)) return 'Desconocido';
+            if (isNaN(bytes)) return 'Unknown';
             
             const units = ['B', 'KB', 'MB', 'GB'];
             let size = bytes;
@@ -534,21 +534,21 @@
             return `${size.toFixed(1)} ${units[unitIndex]}`;
         }
 
-        // ===== REGISTRAR DESCARGA =====
+        // ===== REGISTER DOWNLOAD =====
         function registerDownload(modelId) {
-            console.log('⬇️ Descargando modelo:', modelId);
+            console.log('⬇️ Downloading model:', modelId);
             
-            // Contar descarga
+            // Count download
             if (!downloads[modelId]) downloads[modelId] = 0;
             downloads[modelId]++;
             
-            // Guardar
+            // Save
             localStorage.setItem('rsm_downloads', JSON.stringify(downloads));
             
-            // Actualizar estadísticas
+            // Update statistics
             updateStats();
             
-            // Recargar modelos para actualizar contador
+            // Reload models to update counter
             if (currentSection === 'models') {
                 setTimeout(() => {
                     loadModels();
@@ -558,16 +558,16 @@
             return true;
         }
 
-        // ===== ACTUALIZAR ESTADÍSTICAS =====
+        // ===== UPDATE STATISTICS =====
         function updateStats() {
-            // Total de modelos
+            // Total models
             const totalModelsElement = document.getElementById('total-models');
             if (totalModelsElement) {
                 totalModelsElement.textContent = models.length;
             }
         }
 
-        // ===== INICIAR APP CUANDO EL DOM ESTÉ LISTO =====
+        // ===== START APP WHEN DOM IS READY =====
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
